@@ -1225,14 +1225,17 @@ data = {
 # Convert data to DataFrame
 df = pd.DataFrame(data)
 
-# Create a pipeline with a CountVectorizer and a MultinomialNB classifier
-model = make_pipeline(
-    CountVectorizer(),
-    MultinomialNB()
-)
+model = None
 
-# Fit the model with the training data
-model.fit(df['Input'], df['Category'])
+def train_model():
+    """ Train the model only once and store it in a global variable. """
+    global model
+    if model is None:  # Ensures training runs only once
+        model = make_pipeline(CountVectorizer(), MultinomialNB())
+        model.fit(df['Input'], df['Category'])
+
+# Train the model once when the app starts
+train_model()
 
 # Mock products dictionary - each category has a list of products
 products = {
